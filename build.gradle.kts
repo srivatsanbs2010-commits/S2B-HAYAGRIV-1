@@ -56,3 +56,15 @@ dependencies {
     implementation("androidx.compose.material3:material3")
     debugImplementation("androidx.compose.ui:ui-tooling")
 }
+
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
+tasks.withType<KotlinCompile>().configureEach {
+    dependsOn(
+        "mergeDebugAssets",
+        "compressDebugAssets",
+        "checkDebugDuplicateClasses",
+        "desugarDebugFileDependencies",
+        "mergeDebugShaders"
+    )
+}
