@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
     id("com.android.application") version "8.7.3"
     id("org.jetbrains.kotlin.android") version "2.0.21"
@@ -37,36 +35,31 @@ android {
         compose = true
     }
 
+    /*
+     * Flat Android project.
+     *
+     * Kotlin/Java files are kept at the repository root.
+     * We explicitly provide only Kotlin/Java source files so
+     * Gradle does not scan its own build directory.
+     */
     sourceSets {
         getByName("main") {
             manifest.srcFile("AndroidManifest.xml")
 
-            /*
-             * The project is intentionally flat.
-             * Kotlin/Java source files are located at the repository root.
-             */
-            java.srcDir(".")
+            java.setSrcDirs(
+                listOf(
+                    fileTree(".") {
+                        include("**/*.kt")
+                        include("**/*.java")
 
-            /*
-             * IMPORTANT:
-             * Do not allow Gradle's generated build files,
-             * GitHub workflow files, or Gradle configuration files
-             * to become Android source files.
-             */
-            java.exclude(
-                "build/**",
-                ".gradle/**",
-                ".github/**",
-                ".git/**",
-                "gradle/**",
-                ".idea/**",
-                "*.gradle",
-                "*.gradle.kts",
-                "settings.gradle",
-                "settings.gradle.kts",
-                "gradlew",
-                "gradlew.bat",
-                "local.properties"
+                        exclude("build/**")
+                        exclude(".gradle/**")
+                        exclude(".git/**")
+                        exclude(".github/**")
+                        exclude("gradle/**")
+                        exclude(".idea/**")
+                    }
+                )
             )
 
             res.srcDir("res")
@@ -77,9 +70,12 @@ android {
 
 dependencies {
     implementation("androidx.core:core-ktx:1.15.0")
+
     implementation("androidx.activity:activity-compose:1.10.1")
 
-    implementation(platform("androidx.compose:compose-bom:2025.01.00"))
+    implementation(
+        platform("androidx.compose:compose-bom:2025.01.00")
+    )
 
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-tooling-preview")
