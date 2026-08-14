@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "S2B-Hayagriva-AndroidV1"
+include(":app")

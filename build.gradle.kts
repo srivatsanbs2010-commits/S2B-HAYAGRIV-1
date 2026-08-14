@@ -1,7 +1,7 @@
 plugins {
-    id("com.android.application") version "8.7.3"
-    id("org.jetbrains.kotlin.android") version "2.0.21"
-    id("org.jetbrains.kotlin.plugin.compose") version "2.0.21"
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.plugin.compose")
 }
 
 android {
@@ -19,6 +19,10 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 
@@ -34,39 +38,14 @@ android {
     buildFeatures {
         compose = true
     }
-
-    sourceSets {
-        getByName("main") {
-            manifest.srcFile("AndroidManifest.xml")
-            java.setSrcDirs(emptyList<String>())
-            res.setSrcDirs(emptyList<String>())
-            assets.setSrcDirs(emptyList<String>())
-        }
-    }
 }
 
 dependencies {
     implementation("androidx.core:core-ktx:1.15.0")
-
     implementation("androidx.activity:activity-compose:1.10.1")
-
-    implementation(
-        platform("androidx.compose:compose-bom:2025.01.00")
-    )
-
+    implementation(platform("androidx.compose:compose-bom:2025.01.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
-
     debugImplementation("androidx.compose.ui:ui-tooling")
-}
-
-/*
- * The project is intentionally flat.
- *
- * MainActivity.kt is at the repository root.
- * We explicitly tell Kotlin to compile that one file.
- */
-tasks.named<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>("compileDebugKotlin") {
-    source("MainActivity.kt")
 }

@@ -1,32 +1,9 @@
-# S2B Hayagriva — Flat Android Project
+# S2B Hayagriva Android
 
-This is a deliberately flat Android Gradle project.
+Standard Android Gradle project for S2B Hayagriva.
 
-All project files are at the ZIP root:
-- build.gradle.kts
-- settings.gradle.kts
-- gradle.properties
-- AndroidManifest.xml
-- MainActivity.kt
-- proguard-rules.pro
-- main.yml
+Build debug APK with:
 
-The Android module is the root project, so the debug task is:
+`gradle :app:assembleDebug`
 
-    gradle assembleDebug
-
-NOT:
-
-    gradle :app:assembleDebug
-
-## GitHub Actions
-
-GitHub only executes workflow files from:
-
-    .github/workflows/
-
-Therefore `main.yml` is intentionally at the ZIP root to satisfy the
-"no subfolders" requirement. To make GitHub Actions execute it, move/copy
-`main.yml` to `.github/workflows/main.yml` after uploading the flat files.
-
-No Codespaces is required.
+GitHub Actions uploads `app-debug.apk` as the `S2B-Hayagriva-debug-APK` artifact.
