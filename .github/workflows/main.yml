@@ -3,7 +3,9 @@ name: Build S2B Hayagriva APK
 on:
   workflow_dispatch:
   push:
-    branches: [ "main", "master" ]
+    branches:
+      - main
+      - master
 
 permissions:
   contents: read
@@ -35,17 +37,20 @@ jobs:
         with:
           gradle-version: "8.9"
 
-      - name: Verify project
+      - name: Verify Gradle project
         run: |
-          echo "=== ROOT FILES ==="
+          echo "=== PROJECT FILES ==="
           ls -la
+
           echo "=== GRADLE PROJECTS ==="
           gradle --no-daemon projects
-          echo "=== GRADLE TASKS ==="
-          gradle --no-daemon tasks --all | grep -E "assembleDebug|assembleRelease" || true
+
+          echo "=== ASSEMBLE DEBUG TASK ==="
+          gradle --no-daemon tasks --all | grep assembleDebug
 
       - name: Build Debug APK
-        run: gradle --no-daemon assembleDebug
+        run: |
+          gradle --no-daemon assembleDebug
 
       - name: Check APK
         run: |
