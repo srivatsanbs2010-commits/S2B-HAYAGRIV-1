@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
     id("com.android.application") version "8.7.3"
     id("org.jetbrains.kotlin.android") version "2.0.21"
@@ -40,15 +38,9 @@ android {
     sourceSets {
         getByName("main") {
             manifest.srcFile("AndroidManifest.xml")
-
-            /*
-             * Keep the Android project completely flat.
-             * Kotlin source is supplied directly to KotlinCompile below.
-             */
             java.setSrcDirs(emptyList<String>())
-
-            res.srcDirs(emptyList<String>())
-            assets.srcDirs(emptyList<String>())
+            res.setSrcDirs(emptyList<String>())
+            assets.setSrcDirs(emptyList<String>())
         }
     }
 }
@@ -70,18 +62,11 @@ dependencies {
 }
 
 /*
- * The Kotlin source file is intentionally at the repository root.
- * Only root-level Kotlin files are included.
+ * The project is intentionally flat.
  *
- * This prevents Gradle from scanning:
- *   build/
- *   .gradle/
- *   .git/
- *   .github/
- * and other generated directories.
+ * MainActivity.kt is at the repository root.
+ * We explicitly tell Kotlin to compile that one file.
  */
-tasks.withType<KotlinCompile>().configureEach {
-    source = project.fileTree(project.projectDir) {
-        include("*.kt")
-    }
+tasks.named<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>("compileDebugKotlin") {
+    source("MainActivity.kt")
 }
