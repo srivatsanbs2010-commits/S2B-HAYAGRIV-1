@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     id("com.android.application") version "8.7.3"
     id("org.jetbrains.kotlin.android") version "2.0.21"
@@ -35,35 +37,18 @@ android {
         compose = true
     }
 
-    /*
-     * Flat Android project.
-     *
-     * Kotlin/Java files are kept at the repository root.
-     * We explicitly provide only Kotlin/Java source files so
-     * Gradle does not scan its own build directory.
-     */
     sourceSets {
         getByName("main") {
             manifest.srcFile("AndroidManifest.xml")
 
-            java.setSrcDirs(
-                listOf(
-                    fileTree(".") {
-                        include("**/*.kt")
-                        include("**/*.java")
+            /*
+             * Keep the Android project completely flat.
+             * Kotlin source is supplied directly to KotlinCompile below.
+             */
+            java.setSrcDirs(emptyList<String>())
 
-                        exclude("build/**")
-                        exclude(".gradle/**")
-                        exclude(".git/**")
-                        exclude(".github/**")
-                        exclude("gradle/**")
-                        exclude(".idea/**")
-                    }
-                )
-            )
-
-            res.srcDir("res")
-            assets.srcDir("assets")
+            res.srcDirs(emptyList<String>())
+            assets.srcDirs(emptyList<String>())
         }
     }
 }
@@ -82,4 +67,21 @@ dependencies {
     implementation("androidx.compose.material3:material3")
 
     debugImplementation("androidx.compose.ui:ui-tooling")
+}
+
+/*
+ * The Kotlin source file is intentionally at the repository root.
+ * Only root-level Kotlin files are included.
+ *
+ * This prevents Gradle from scanning:
+ *   build/
+ *   .gradle/
+ *   .git/
+ *   .github/
+ * and other generated directories.
+ */
+tasks.withType<KotlinCompile>().configureEach {
+    source = project.fileTree(project.projectDir) {
+        include("*.kt")
+    }
 }
